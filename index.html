@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>荔香引 · 蘇軾食荔支</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/ma-shan-zheng@latest/chinese-traditional-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/zcool-xiaowei@latest/chinese-traditional-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/noto-serif-tc@latest/chinese-traditional-400-normal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/fontsource/css/noto-serif-tc@latest/chinese-traditional-700-normal.css">
+<style>
+:root{
+  --ink:#16120e; --ink2:#221b14; --paper:#efe4cd; --paper2:#e3d4b3;
+  --cin:#b23a2e; --cin2:#8c2a20; --gold:#c9a24b; --gold2:#e6c878;
+  --jade:#5d7d63; --plum:#7a3b52; --indigo:#33485c;
+  --call:'Ma Shan Zheng','ZCOOL XiaoWei','Noto Serif TC',serif;
+  --body:'Noto Serif TC','Songti TC',serif;
+  --ui:'ZCOOL XiaoWei','Noto Serif TC',serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:#000;color:var(--paper);font-family:var(--body);}
+#game{position:fixed;inset:0;overflow:hidden;background:#0c0a08;user-select:none;}
+
+#bgLayer{position:absolute;inset:0;z-index:1;}
+.bg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.1s ease; transform:scale(1.06);}
+.bg.on{opacity:1;animation:kenburns 26s ease-in-out infinite alternate;}
+@keyframes kenburns{from{transform:scale(1.05) translate(0,0);}to{transform:scale(1.16) translate(-1.5%,-1.5%);}}
+#veil{position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:radial-gradient(120% 90% at 50% 35%,transparent 38%,rgba(8,6,4,.45) 78%,rgba(6,4,3,.82) 100%),
+  linear-gradient(180deg,rgba(8,6,4,.35),transparent 22%,transparent 60%,rgba(8,6,4,.55));}
+#fx{position:absolute;inset:0;z-index:3;pointer-events:none;}
+
+#chars{position:absolute;inset:0;z-index:4;pointer-events:none;}
+.char{position:absolute;bottom:0;height:82vh;max-height:720px;width:auto;aspect-ratio:6/7;
+  transform-origin:bottom center;transition:opacity .6s ease,transform .6s ease,filter .5s ease;
+  opacity:0;filter:brightness(.55) saturate(.8);}
+.char.show{opacity:1;}
+.char.speak{filter:brightness(1.05) saturate(1.05) drop-shadow(0 0 26px rgba(201,162,75,.25));}
+.char.dim{filter:brightness(.5) saturate(.7);}
+.char.pos-left{left:1.5vw;animation:swayL 7s ease-in-out infinite;}
+.char.pos-right{right:1.5vw;animation:swayR 7.6s ease-in-out infinite;}
+.char.pos-center{left:50%;transform:translateX(-50%);animation:swayC 8s ease-in-out infinite;}
+.char.pos-center.speak{transform:translateX(-50%) scale(1.02);}
+@keyframes swayL{0%,100%{transform:rotate(-.5deg)}50%{transform:rotate(.5deg)}}
+@keyframes swayR{0%,100%{transform:rotate(.5deg)}50%{transform:rotate(-.5deg)}}
+@keyframes swayC{0%,100%{transform:translateX(-50%) rotate(-.3deg)}50%{transform:translateX(-50%) rotate(.3deg)}}
+.scroll{position:relative;height:100%;width:100%;display:flex;flex-direction:column;align-items:center;filter:drop-shadow(0 18px 30px rgba(0,0,0,.6));}
+.rod{height:18px;width:calc(100% + 34px);background:linear-gradient(180deg,#5a3a22,#2c1a0e 60%,#4a2e1a);border-radius:9px;position:relative;box-shadow:0 3px 6px rgba(0,0,0,.5);z-index:2;flex:0 0 auto;}
+.rod::before,.rod::after{content:"";position:absolute;top:-5px;width:26px;height:28px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--gold2),var(--gold) 45%,#7a5a1e);box-shadow:0 2px 4px rgba(0,0,0,.5);}
+.rod::before{left:-13px;}.rod::after{right:-13px;}
+.paper{flex:1 1 auto;width:100%;border-left:13px solid;border-right:13px solid;
+  border-image:linear-gradient(180deg,#7a2a22,#a8463a 20%,#7a2a22 50%,#a8463a 80%,#5e1d16) 1;
+  overflow:hidden;background:#efe4cd;position:relative;min-height:0;}
+.paper img{height:100%;width:100%;display:block;object-fit:cover;object-position:center 18%;}
+.fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--call);font-size:clamp(34px,7vh,72px);color:var(--cin);writing-mode:vertical-rl;
+  letter-spacing:12px;text-shadow:0 2px 0 rgba(255,255,255,.4);
+  background:repeating-linear-gradient(180deg,#efe4cd,#efe4cd 22px,#e7d8b6 23px);}
+.roll{height:24px;width:calc(100% + 18px);background:linear-gradient(180deg,#3a2414,#1c1008 55%,#3a2414);border-radius:12px;box-shadow:0 6px 10px rgba(0,0,0,.55);z-index:2;flex:0 0 auto;}
+
+#hud{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;justify-content:space-between;align-items:flex-start;padding:14px 18px;pointer-events:none;}
+#chapPlaque{pointer-events:auto;position:relative;padding:10px 18px 12px;color:var(--gold2);
+  font-family:var(--call);font-size:clamp(15px,2.2vw,22px);letter-spacing:3px;
+  background:linear-gradient(180deg,rgba(28,20,12,.82),rgba(16,11,7,.86));
+  border:1px solid rgba(201,162,75,.5);border-top:3px solid var(--cin);
+  box-shadow:0 6px 18px rgba(0,0,0,.5);max-width:60vw;}
+#chapPlaque small{display:block;font-family:var(--ui);font-size:11px;letter-spacing:5px;color:var(--cin);opacity:.85;margin-bottom:2px;}
+#ctrls{pointer-events:auto;display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;max-width:62vw;}
+.btn{font-family:var(--ui);font-size:13px;letter-spacing:2px;color:var(--paper);cursor:pointer;
+  padding:7px 11px;background:linear-gradient(180deg,rgba(40,29,18,.85),rgba(20,14,9,.9));
+  border:1px solid rgba(201,162,75,.4);transition:.2s;position:relative;}
+.btn:hover{color:var(--ink);background:var(--gold);border-color:var(--gold2);transform:translateY(-1px);}
+.btn.on{color:var(--gold2);border-color:var(--cin);box-shadow:inset 0 0 0 1px var(--cin);}
+.btn .ic{font-family:var(--call);margin-right:3px;}
+
+#dlgWrap{position:absolute;left:0;right:0;bottom:0;z-index:15;padding:0 2.5vw 2.4vh;pointer-events:none;}
+#dlg{pointer-events:auto;position:relative;min-height:30vh;max-height:42vh;padding:34px clamp(20px,4vw,60px) 26px;
+  background:linear-gradient(180deg,rgba(243,232,205,.97),rgba(227,212,179,.97));
+  border:2px solid var(--cin);box-shadow:0 -8px 40px rgba(0,0,0,.55),inset 0 0 0 6px rgba(239,228,205,.6),inset 0 0 0 7px rgba(178,58,46,.5);
+  color:#241a12;cursor:pointer;}
+#dlg::before,#dlg::after{content:"";position:absolute;width:26px;height:26px;border:2px solid var(--gold);}
+#dlg::before{top:8px;left:8px;border-right:none;border-bottom:none;}
+#dlg::after{bottom:8px;right:8px;border-left:none;border-top:none;}
+.corner2,.corner3{position:absolute;width:26px;height:26px;border:2px solid var(--gold);}
+.corner2{top:8px;right:8px;border-left:none;border-bottom:none;}
+.corner3{bottom:8px;left:8px;border-right:none;border-top:none;}
+#namePlate{position:absolute;top:-22px;left:clamp(16px,3vw,46px);padding:6px 22px 8px;
+  font-family:var(--call);font-size:clamp(18px,2.6vw,26px);letter-spacing:4px;color:var(--paper);
+  background:linear-gradient(180deg,var(--cin),var(--cin2));border:2px solid var(--gold);
+  box-shadow:0 5px 12px rgba(0,0,0,.4);transition:background .3s;}
+#namePlate::after{content:"";position:absolute;inset:3px;border:1px solid rgba(230,200,120,.5);pointer-events:none;}
+#text{font-family:var(--body);font-weight:400;font-size:clamp(16px,2.15vw,22px);line-height:2;letter-spacing:1px;
+  min-height:7.5em;text-shadow:0 1px 0 rgba(255,255,255,.3);}
+#adv{position:absolute;right:clamp(18px,3vw,40px);bottom:12px;color:var(--cin);font-size:20px;animation:bob 1s ease-in-out infinite;opacity:.85;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+#choices{position:absolute;inset:0;z-index:18;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:6vh 5vw;
+  background:radial-gradient(circle at 50% 50%,rgba(8,6,4,.35),rgba(6,4,3,.7));}
+#choices.on{display:flex;}
+.choice{pointer-events:auto;position:relative;width:min(640px,86vw);text-align:left;cursor:pointer;
+  font-family:var(--body);font-size:clamp(15px,2vw,20px);letter-spacing:1.5px;color:#2a1d12;
+  padding:15px 26px 15px 46px;background:linear-gradient(180deg,rgba(243,232,205,.96),rgba(224,208,172,.96));
+  border:1px solid var(--gold);box-shadow:0 6px 16px rgba(0,0,0,.45);transition:.22s;overflow:hidden;}
+.choice::before{content:"";position:absolute;left:0;top:0;bottom:0;width:8px;background:linear-gradient(180deg,var(--cin),var(--cin2));}
+.choice::after{content:"印";position:absolute;right:14px;top:50%;transform:translateY(-50%) rotate(-8deg);
+  font-family:var(--call);color:var(--cin);opacity:0;font-size:26px;transition:.22s;}
+.choice:hover{transform:translateX(8px);background:linear-gradient(180deg,#fff6e2,#f0e0bb);box-shadow:0 8px 22px rgba(178,58,46,.35);color:var(--cin2);}
+.choice:hover::after{opacity:.7;}
+.choice .num{font-family:var(--call);color:var(--cin);margin-right:10px;font-size:1.2em;}
+
+#splash{position:absolute;inset:0;z-index:30;display:none;align-items:center;justify-content:center;flex-direction:column;
+  background:radial-gradient(circle at 50% 50%,rgba(12,9,6,.78),rgba(6,4,3,.95));}
+#splash.on{display:flex;animation:fadein .6s ease;}
+#splash .ch-no{font-family:var(--ui);letter-spacing:10px;color:var(--cin);font-size:clamp(13px,2vw,18px);margin-bottom:14px;opacity:0;animation:rise .8s .2s forwards;}
+#splash .ch-title{font-family:var(--call);color:var(--gold2);font-size:clamp(40px,8vw,90px);letter-spacing:8px;text-shadow:0 4px 24px rgba(0,0,0,.7);opacity:0;animation:rise .9s .45s forwards;}
+#splash .ch-line{width:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin-top:18px;animation:grow 1s .8s forwards;}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes grow{to{width:min(420px,60vw)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+
+#title{position:absolute;inset:0;z-index:40;display:flex;align-items:stretch;background:#0c0a08;}
+#title .tbg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.55;filter:saturate(.9);}
+#title .tveil{position:absolute;inset:0;background:linear-gradient(100deg,rgba(8,6,4,.92) 0%,rgba(8,6,4,.7) 38%,rgba(8,6,4,.25) 70%,rgba(8,6,4,.55) 100%);}
+#title .inner{position:relative;z-index:2;width:100%;display:flex;flex-direction:column;justify-content:center;padding:6vh 7vw;}
+#title .seal{position:absolute;top:6vh;right:7vw;width:74px;height:74px;background:var(--cin);color:var(--paper);
+  font-family:var(--call);font-size:30px;display:flex;align-items:center;justify-content:center;line-height:1;
+  box-shadow:0 4px 14px rgba(0,0,0,.5);transform:rotate(-4deg);border:2px solid rgba(230,200,120,.4);}
+#title h1{font-family:var(--call);font-size:clamp(64px,13vw,150px);line-height:.92;color:var(--paper);letter-spacing:6px;
+  text-shadow:0 0 30px rgba(178,58,46,.4),4px 4px 0 var(--cin2);}
+#title h1 .accent{color:var(--gold2);}
+#title .sub{font-family:var(--ui);letter-spacing:8px;color:var(--gold);font-size:clamp(14px,2.4vw,22px);margin-top:10px;}
+#title .tag{font-family:var(--body);color:rgba(239,228,205,.7);font-size:clamp(12px,1.7vw,16px);margin-top:22px;max-width:560px;line-height:1.9;letter-spacing:1px;}
+#title .menu{margin-top:38px;display:flex;flex-direction:column;gap:12px;align-items:flex-start;}
+.tbtn{font-family:var(--call);font-size:clamp(20px,3vw,30px);letter-spacing:6px;color:var(--paper);cursor:pointer;
+  padding:6px 4px;background:none;border:none;border-left:3px solid transparent;transition:.25s;text-align:left;}
+.tbtn:hover{color:var(--gold2);border-left-color:var(--cin);padding-left:14px;text-shadow:0 0 14px rgba(201,162,75,.4);}
+.tbtn small{font-family:var(--ui);font-size:11px;letter-spacing:3px;color:var(--cin);margin-left:10px;opacity:.8;}
+#title .credit{position:absolute;bottom:4vh;left:7vw;font-family:var(--ui);font-size:11px;letter-spacing:3px;color:rgba(239,228,205,.4);}
+
+.modal{position:absolute;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:rgba(6,4,3,.78);}
+.modal.on{display:flex;}
+.panel{position:relative;width:min(560px,90vw);max-height:84vh;overflow:auto;padding:30px 34px;
+  background:linear-gradient(180deg,rgba(34,27,20,.97),rgba(20,15,10,.98));border:2px solid var(--gold);
+  box-shadow:0 20px 60px rgba(0,0,0,.7);color:var(--paper);}
+.panel h2{font-family:var(--call);color:var(--gold2);font-size:30px;letter-spacing:5px;margin-bottom:18px;border-bottom:1px solid rgba(201,162,75,.3);padding-bottom:10px;}
+.panel .close{position:absolute;top:14px;right:18px;cursor:pointer;color:var(--cin);font-family:var(--call);font-size:26px;}
+.row{display:flex;align-items:center;justify-content:space-between;margin:16px 0;font-family:var(--ui);letter-spacing:2px;}
+.row input[type=range]{width:55%;accent-color:var(--cin);}
+.slots{display:flex;flex-direction:column;gap:12px;margin-top:8px;}
+.slot{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border:1px solid rgba(201,162,75,.3);cursor:pointer;transition:.2s;font-family:var(--ui);}
+.slot:hover{border-color:var(--gold);background:rgba(201,162,75,.08);}
+.slot .info{font-size:13px;letter-spacing:1px;color:var(--paper2);}
+.slot .info b{color:var(--gold2);font-family:var(--call);font-size:18px;letter-spacing:3px;margin-right:10px;}
+.slot .act{display:flex;gap:8px;}
+.slot .act span{padding:5px 12px;border:1px solid var(--cin);color:var(--paper);font-size:12px;transition:.2s;}
+.slot .act span:hover{background:var(--cin);}
+.slot.empty .info{color:rgba(239,228,205,.4);}
+
+.bonds{margin-top:6px;}
+.bond{margin:12px 0;}
+.bond .lab{display:flex;justify-content:space-between;font-family:var(--ui);letter-spacing:2px;font-size:14px;margin-bottom:5px;}
+.bond .lab .v{color:var(--gold2);}
+.bar{height:10px;background:rgba(0,0,0,.4);border:1px solid rgba(201,162,75,.3);position:relative;overflow:hidden;}
+.bar i{position:absolute;left:0;top:0;bottom:0;width:0;transition:width .6s ease;background:linear-gradient(90deg,var(--cin2),var(--cin),var(--gold));}
+
+#logList{display:flex;flex-direction:column;gap:10px;}
+.logline{font-family:var(--body);font-size:15px;line-height:1.8;color:var(--paper2);padding-bottom:8px;border-bottom:1px dashed rgba(201,162,75,.18);}
+.logline b{font-family:var(--call);color:var(--gold2);letter-spacing:2px;margin-right:8px;}
+
+#endCard{position:absolute;inset:0;z-index:45;display:none;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:6vh 6vw;
+  background:radial-gradient(circle at 50% 40%,rgba(12,9,6,.55),rgba(4,3,2,.92));}
+#endCard.on{display:flex;animation:fadein 1.4s ease;}
+#endCard .etype{font-family:var(--ui);letter-spacing:8px;color:var(--cin);font-size:clamp(12px,2vw,16px);opacity:0;animation:rise 1s .3s forwards;}
+#endCard .etitle{font-family:var(--call);color:var(--gold2);font-size:clamp(40px,8vw,84px);letter-spacing:8px;margin:10px 0 18px;text-shadow:0 4px 24px rgba(0,0,0,.7);opacity:0;animation:rise 1s .7s forwards;}
+#endCard .epoem{font-family:var(--body);color:var(--paper);font-size:clamp(15px,2.2vw,21px);line-height:2.2;letter-spacing:2px;max-width:680px;white-space:pre-line;opacity:0;animation:rise 1s 1.1s forwards;}
+#endCard .estats{margin-top:24px;font-family:var(--ui);color:rgba(239,228,205,.7);letter-spacing:2px;font-size:13px;opacity:0;animation:rise 1s 1.5s forwards;}
+#endCard .ebtns{margin-top:30px;display:flex;gap:16px;opacity:0;animation:rise 1s 1.8s forwards;}
+#endCard .ebtns button{font-family:var(--call);font-size:22px;letter-spacing:5px;color:var(--paper);background:none;border:1px solid var(--gold);padding:8px 26px;cursor:pointer;transition:.25s;}
+#endCard .ebtns button:hover{background:var(--cin);border-color:var(--cin);color:var(--paper);}
+
+#toast{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:60;pointer-events:none;
+  font-family:var(--call);font-size:26px;letter-spacing:4px;color:var(--gold2);background:rgba(12,9,6,.85);
+  border:1px solid var(--cin);padding:12px 30px;opacity:0;transition:opacity .4s;}
+#toast.on{opacity:1;}
+
+@media(max-width:760px){
+  .char{height:52vh;aspect-ratio:5/6;}
+  #dlg{min-height:34vh;}
+  #text{min-height:9em;}
+  #ctrls .btn{padding:6px 8px;font-size:11px;}
+  #chapPlaque{font-size:14px;padding:7px 12px;}
+}
+</style>
+</head>
+<body>
+<div id="game">
+  <div id="bgLayer"></div>
+  <div id="veil"></div>
+  <canvas id="fx"></canvas>
+  <div id="chars"></div>
+
+  <div id="hud">
+    <div id="chapPlaque"><small>卷</small><span id="chapName">序</span></div>
+    <div id="ctrls">
+      <div class="btn" id="bAuto"><span class="ic">自</span>自動</div>
+      <div class="btn" id="bSkip"><span class="ic">»</span>快進</div>
+      <div class="btn" id="bLog"><span class="ic">回</span>回顧</div>
+      <div class="btn" id="bBond"><span class="ic">緣</span>羈絆</div>
+      <div class="btn" id="bSave"><span class="ic">存</span>存檔</div>
+      <div class="btn" id="bLoad"><span class="ic">讀</span>讀檔</div>
+      <div class="btn on" id="bMusic"><span class="ic">♪</span>樂</div>
+      <div class="btn" id="bConf"><span class="ic">設</span>設定</div>
+    </div>
+  </div>
+
+  <div id="dlgWrap">
+    <div id="dlg">
+      <span class="corner2"></span><span class="corner3"></span>
+      <div id="namePlate">旁白</div>
+      <div id="text"></div>
+      <div id="adv">▼</div>
+    </div>
+  </div>
+
+  <div id="choices"></div>
+
+  <div id="splash"><div class="ch-no"></div><div class="ch-title"></div><div class="ch-line"></div></div>
+
+  <div id="endCard">
+    <div class="etype"></div>
+    <div class="etitle"></div>
+    <div class="epoem"></div>
+    <div class="estats"></div>
+    <div class="ebtns"><button id="endReplay">再續前緣</button><button id="endTitle">歸於卷首</button></div>
+  </div>
+
+  <div id="title">
+    <div class="tbg"></div><div class="tveil"></div>
+    <div class="seal">東坡</div>
+    <div class="inner">
+      <h1>荔<span class="accent">香</span>引</h1>
+      <div class="sub">—— 蘇 軾 · 食 荔 支 ——</div>
+      <div class="tag">元豐二年，烏臺詩案，一紙詩獄，幾斷他性命。<br>其後黃州、惠州、儋州，一貶再貶，直至天涯海角。<br>而救他者、害他者，竟是同一人——章惇。<br>日啖荔支三百顆，你，可願陪他走完這一生？</div>
+      <div class="menu">
+        <button class="tbtn" id="tStart">開 卷 <small>新遊戲</small></button>
+        <button class="tbtn" id="tCont">續 讀 <small>讀取存檔</small></button>
+        <button class="tbtn" id="tMute">調 弦 <small>音樂開關</small></button>
+      </div>
+    </div>
+    <div class="credit">文字視覺小說 · 古風 · 多結局 · 含生成音樂 · 據正史改編</div>
+  </div>
+
+  <div class="modal" id="mConf">
+    <div class="panel">
+      <span class="close" data-close>✕</span>
+      <h2>設 定</h2>
+      <div class="row"><span>音樂音量</span><input type="range" id="volMusic" min="0" max="100" value="55"></div>
+      <div class="row"><span>音效音量</span><input type="range" id="volSfx" min="0" max="100" value="70"></div>
+      <div class="row"><span>文字速度</span><input type="range" id="txtSpeed" min="10" max="90" value="42"></div>
+      <div class="row"><span>自動延遲</span><input type="range" id="autoDelay" min="10" max="60" value="28"></div>
+      <div class="row"><span>背景音樂</span><span id="muteToggle" class="btn on" style="pointer-events:auto">開</span></div>
+      <div class="row" style="margin-top:24px;justify-content:center;gap:14px;">
+        <span class="btn" id="resetGame" style="pointer-events:auto">重頭開卷</span>
+        <span class="btn" id="backTitle" style="pointer-events:auto">返回卷首</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="mBond">
+    <div class="panel">
+      <span class="close" data-close>✕</span>
+      <h2>羈 絆</h2>
+      <div class="bonds" id="bondBox"></div>
+      <p style="font-family:var(--ui);font-size:12px;letter-spacing:1px;color:rgba(239,228,205,.5);margin-top:18px;line-height:1.8;">
+        豁達為心之軸，餘者為緣。緣之所鐘，即結局之所歸。</p>
+    </div>
+  </div>
+
+  <div class="modal" id="mLog">
+    <div class="panel">
+      <span class="close" data-close>✕</span>
+      <h2>回 顧</h2>
+      <div id="logList"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="mSave">
+    <div class="panel">
+      <span class="close" data-close>✕</span>
+      <h2 id="saveTitle">存 檔</h2>
+      <div class="slots" id="slotBox"></div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+</div>
+
+<script>
+/* ============================ ASSETS ============================ */
+const IMG={
+ sushi:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/133d24521-5103-4593-86cd-94e38920fb60.png',
+ chaoyun:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1003152ce-97a4-4ca8-beda-2dbf6a4e2612.png',
+ zhangdun:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1f4550bcc-ba58-4500-b480-34009894a729.png',
+ guo:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1e3b96e8d-5047-46a4-a5c3-08575d384724.png',
+ linang:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1640c470e-dde9-4406-9601-1ca6275eb2b8.png',
+ luoshi:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/140879465-e51c-41c5-ab21-db6afa377ef7.png',
+ bg_title:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/11cf716ac-3442-4b9f-8b2c-97124a3b95c2.png',
+ bg_prison:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1aad930ad-14dc-46bc-acc6-55aa5831c1a1.png',
+ bg_huangzhou:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/15460a09e-c6b7-43b7-91f3-aa3732c09810.png',
+ bg_ridge:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1882b889a-475f-4327-af3b-900b606bde22.png',
+ bg_huizhou:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/10c283ad1-24af-48ed-b953-6b76aa7a7c79.png',
+ bg_luofu:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/14c338f25-6eac-4922-b08c-2de33ad399a5.png',
+ bg_orchard:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/173a875e0-ea20-4442-aaff-0ea1a3fa8b5c.png',
+ bg_westlake:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/11de80cb0-c6df-4497-85a9-6a8e5ea34059.png',
+ bg_danzhou:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1b9af734f-8117-4204-b0e3-2d7b0ac4f73b.png',
+ bg_boat:'https://image.qwenlm.ai/public_source/614264ab-d762-4a73-8918-bf296deb0a11/1ef8c64e8-2a61-45ed-95ba-d1f6406873c5.png'
+};
+const NAME={sushi:'蘇 軾',chaoyun:'朝 雲',linang:'荔 娘',zhangdun:'章 惇',guo:'蘇 過',luoshi:'羅 道 士',narrator:'旁 白'};
+const PLATE={sushi:'#b23a2e',chaoyun:'#7a3b52',linang:'#a8463a',zhangdun:'#4a3a5c',guo:'#33485c',luoshi:'#3d5a52',narrator:'#3a2e22'};
+const BOND_LABEL={huoda:'豁達 · 心軸',chaoyun:'朝雲 · 深情',linang:'荔娘 · 南國',zihou:'子厚 · 恩怨'};
+
+/* ============================ SCRIPT ============================ */
+const S={
+/* ---- 序章 烏臺詩案 ---- */
+w0:{bg:'bg_prison',chapter:['序章','烏 臺 詩 案'],audio:'sad',
+  chars:[{id:'sushi',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'元豐二年，七月。湖州知州蘇軾，因詩文「謗訕朝政」，被御史臺差官緝拿，押赴汴京，下獄於烏臺。'},
+   {sp:'narrator',t:'鐵窗寒月，孤燈如豆。一百零三個日夜，他與死神對坐，幾度以為此生將盡於此。'},
+   {sp:'sushi',t:'（對燈自書，寄弟子由）是日當死，獨瘞爾……我蘇軾一生以詩為命，今日竟因詩獲罪。文字成獄，古今同悲。'},
+   {sp:'sushi',t:'（擲筆長嘆）我這一生，寫過萬言策，寫過赤壁賦，到頭來，救不得自己一張嘴。'}
+  ],next:'w1'},
+w1:{chars:[{id:'zhangdun',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'獄中傳聞，新黨之中，竟有一人不顧黨爭，力排眾議，在神宗面前為他辯護——那是他舊日的摯友，章惇。'},
+   {sp:'zhangdun',t:'（隔著獄門，神色複雜）東坡！你到如今還不肯收斂你那張放肆的嘴？若非我與眾人拼死力諫，你這顆頭，早已落地了！'},
+   {sp:'zhangdun',t:'我章惇救你，不為黨派，只為惜你之才。但你須記著——這朝堂，已容不下你了。'},
+   {sp:'sushi',t:'（隔門長揖）子厚……當年你攀絕壁題字，面不改色，我曾斷言「子厚必能殺人」。'},
+   {sp:'sushi',t:'我未曾想到，今日救我一命的，竟也是你。這筆賬，我蘇軾記下了。'},
+   {sp:'narrator',t:'元豐三年，他免死，貶為黃州團練副使，本州安置，不得簽署公事。一場詩獄，把他從雲端，摔進了泥裡。'}
+  ],
+  choices:[
+   {t:'「多謝子厚。這一命，我記在心裡，不記在仇上。」',fx:{zihou:6,huoda:3},goto:'h0'},
+   {t:'「我蘇軾無罪。天下後世，自有公論。」（昂然）',fx:{huoda:6},goto:'h0'},
+   {t:'「詩有何罪？文字獄一起，天下人心便死了。」（含恨）',fx:{huoda:-3,zihou:2},goto:'h0'}
+  ]},
+
+/* ---- 第一章 黃州東坡 ---- */
+h0:{bg:'bg_huangzhou',chapter:['第一章','黃 州 東 坡'],audio:'game',
+  chars:[{id:'chaoyun',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'黃州。他於城東荒坡開墾自給，自號「東坡居士」。初到時，寒食苦雨，他寫下「空庖煮寒菜，破灶燒濕葦」——那是他一生最冷的灶。'},
+   {sp:'narrator',t:'可冷灶燒久了，竟也燒出了一點暖意。一日用膳後，他撫著飽腹，與侍兒們散步消食。'},
+   {sp:'sushi',t:'（拍著肚子，笑問）你們且猜猜看，我這肚子裡，裝的都是些什麼？'},
+   {sp:'narrator',t:'一婢搶答：「都是錦繡文章！」他不以為然。又一婢道：「滿腹都是學問才華。」他仍搖頭。'},
+   {sp:'chaoyun',t:'（眉眼彎彎，笑著接口）學士一肚子——不合時宜。'},
+   {sp:'sushi',t:'（捧腹大笑，笑到眼角泛淚）知我者，朝雲也！天下皆笑我不合時宜，唯妳說得最準、最疼。'},
+   {sp:'chaoyun',t:'世道如潮，漲落無常。學士腹中所裝，不過一個「真」字。真，故而不合時宜；不合時宜，故而是學士。'}
+  ],
+  choices:[
+   {t:'「不合時宜便不合時宜。時宜是流水，我心是青山。」',fx:{huoda:7,chaoyun:3},goto:'r0'},
+   {t:'「朝雲，有妳這句話，黃州的冷灶，也燒得暖了。」',fx:{chaoyun:7},goto:'r0'},
+   {t:'「一肚子不合時宜……是笑話，也是實話。唉。」',fx:{huoda:3,chaoyun:2},goto:'r0'}
+  ]},
+
+/* ---- 第二章 大庾嶺上 ---- */
+r0:{bg:'bg_ridge',chapter:['第二章','大 庾 嶺 上'],audio:'sad',
+  chars:[{id:'guo',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'紹聖元年。新黨再起，章惇獨相，盡逐「元祐黨人」。蘇軾自定州任上落職，一貶英州，再貶寧遠軍節度副使，惠州安置。'},
+   {sp:'narrator',t:'繼室王閏之已逝。他遣散家人，令蘇迨、蘇過妻兒赴宜興依長子蘇邁，獨攜幼子與朝雲，主僕數人，南赴瘴海。'},
+   {sp:'sushi',t:'（扶杖立於大庾嶺，望嶺南雲氣）一念失垢污，身心洞清靜。浩然天地間，唯我獨也正。'},
+   {sp:'guo',t:'父親，嶺南瘴癘，比黃州更遠、更險。兒恐您……'},
+   {sp:'sushi',t:'過兒莫怕。當年黃州，為父尚有東坡可耕；這一回惠州——我聽聞那兒的荔支，是天下第一等甜物。'},
+   {sp:'narrator',t:'山風穿林，楓葉如血。他撫著空袖，想起獄中那扇鐵窗——救他的人，如今正是把他推向絕路的人。'}
+  ],
+  choices:[
+   {t:'「此心安處，便是吾鄉。嶺南又如何？」',fx:{huoda:8},goto:'hu0'},
+   {t:'「過兒，為父這一肚子不合時宜，如今連嶺南也容得下了。」',fx:{huoda:4,chaoyun:2},goto:'hu0'},
+   {t:'「子厚為相，我命休矣。他必不讓我安生。」（含恨）',fx:{zihou:5,huoda:-4},goto:'hu0'}
+  ]},
+
+/* ---- 第三章 惠州初至 ---- */
+hu0:{bg:'bg_huizhou',chapter:['第三章','惠 州 初 至'],audio:'game',
+  chars:[{id:'linang',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'惠州臨江，榕蔭如蓋。他本以為是蠻瘼之邦，卻見市井煙火，暖得不像流放之地。'},
+   {sp:'linang',t:'（提一籃枇杷，笑盈盈攔路）老先生莫愁！俺們嶺南，毒蟲是有的，可甜果更多哩！'},
+   {sp:'linang',t:'這枇杷俺們叫「盧橘」，酸甜開胃。州堂前那棵荔支，還是當年陳文惠公——陳堯佐——親手植的呢！'},
+   {sp:'sushi',t:'（接過盧橘，眉眼舒展）陳堯佐……咸平年間權知惠州，手植荔支於州堂。百年樹猶在，人卻早成塵了。'},
+   {sp:'linang',t:'老先生識字多，俺們管它叫「荔支」，書上卻寫「荔枝」，到底哪個對呀？'},
+   {sp:'sushi',t:'古時「支」通「枝」。後來「支」字義雜，怕人混淆，便加一木旁，造「枝」字，專職專用。'},
+   {sp:'sushi',t:'一字之辨，見的是人心求其專一。可世間萬物，偏愛混在一處——苦與甜，貶與賞，生與死，誰又分得清呢？'},
+   {sp:'linang',t:'（歪頭）俺分不清。俺只知，酸的吃多了，回口是甜的。'}
+  ],
+  choices:[
+   {t:'「姑娘這句土話，竟點破了我半生執念。」（悵然一笑）',fx:{huoda:6,linang:3},goto:'lu0'},
+   {t:'「姑娘笑得這樣好看，這字便隨你叫『荔支』罷。」',fx:{linang:6,huoda:2},goto:'lu0'},
+   {t:'「我乃戴罪之身，這等閒事，不該多問。」（垂目）',fx:{huoda:-4},goto:'lu0'}
+  ]},
+
+/* ---- 第四章 羅浮·羅道士 ---- */
+lu0:{bg:'bg_luofu',chapter:['第四章','羅 浮 羅 道 士'],audio:'game',
+  chars:[{id:'luoshi',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'羅浮山，又名東樵，司馬遷比之為「粵岳」，乃道教十大名山之一。蘇軾寓此甚久，與道士鄧守安——人稱羅道士——往還甚密。'},
+   {sp:'luoshi',t:'（執拂塵，呵呵而笑）蘇先生又來我羅浮了！山中桃熟，丹爐正暖，且與貧道論一論這玄之又玄。'},
+   {sp:'sushi',t:'羅道長，我在此和陶詩四十七首，想在陶淵明的田園裡，給自己築一座精神的家。可築到一半，總忘不了世間。'},
+   {sp:'luoshi',t:'忘世，不如忘我。先生且看這山頭的雲——雲來，山不喜；雲去，山不悲。'},
+   {sp:'luoshi',t:'你是那座山，不是那朵雲。雲聚雲散，與山何干？你之所以苦，是錯把自己當成了雲。'},
+   {sp:'sushi',t:'（默然良久，忽而撫掌）我是山，不是雲……好，好一個山雲之辨！道長這一拂塵，拂去了我心上半層灰。'}
+  ],next:'lu1'},
+lu1:{chars:[{id:'chaoyun',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'朝雲自泗上從比丘尼義沖學佛而來，於羅浮煙靄中合十低眉，像一尊被歲月磨溫的玉。'},
+   {sp:'chaoyun',t:'（輕聲）先生，羅道長說山與雲，義沖師父說夢與幻。到頭來，學士這肚子裡，究竟裝著什麼？'},
+   {sp:'sushi',t:'（朗聲而笑）還是一肚子不合時宜——只不過如今，裡頭又添了幾顆荔支、幾枚蠔、一碗羅浮的雲。'},
+   {sp:'narrator',t:'朝雲與羅道士相視而笑。一佛一道，一山一雲，竟在他這「不合時宜」的肚裡，和解了。'}
+  ],
+  choices:[
+   {t:'「羅道長，我欲和陶，非慕其隱，乃慕其真。真到極處，山雲兩忘。」',fx:{huoda:7},goto:'ly0'},
+   {t:'「山不喜雲來，不悲雲去。朝雲，妳便是我這座山頭，最不肯散的那朵雲。」',fx:{chaoyun:7,huoda:2},goto:'ly0'},
+   {t:'「道長，仙山雖好，不及人間一碗熱粥、一盤蠔、一顆荔。」',fx:{linang:4,huoda:3},goto:'ly0'}
+  ]},
+
+/* ---- 第五章 初食荔支 ---- */
+ly0:{bg:'bg_orchard',chapter:['第五章','初 食 荔 支'],audio:'warm',
+  chars:[{id:'linang',pos:'left'},{id:'chaoyun',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'紹聖二年，四月十一日。嶺南荔支初熟，紅雲壓枝。這是他此生頭一回嘗到這南國珍果——「火山」品種。'},
+   {sp:'linang',t:'（捧一碗冰鎮荔支奔來）先生！這是「火山」，蔡襄《荔支譜》上寫過的——四月熟，味甘酸！俺們這兒還有「大將軍」「小將軍」，個頂個的甜！'},
+   {sp:'chaoyun',t:'（含笑剝殼，露出瑩白果肉，遞到他唇邊）先生，嚐嚐。妾剝的，不酸。'},
+   {sp:'narrator',t:'果肉入口，清甜迸裂，竟壓過了連月痔瘡的苦、謫的酸。他眼眶忽熱。'},
+   {sp:'sushi',t:'（喃喃）這等滋味……王右軍《奉橘帖》贈友三百橘，韋應物「書後欲題三百顆」——'},
+   {sp:'sushi',t:'（索筆，於荔陰下立成絕句，擲地有聲）羅浮山下四時春，盧橘楊梅次第新。日啖荔支三百顆，不辭長作嶺南人！'},
+   {sp:'linang',t:'（拍手歡呼）先生這詩，俺要刻在州堂那棵老樹上！讓後世都知道，蘇學士愛俺們嶺南！'},
+   {sp:'narrator',t:'他不知，這首詩將隨風北去，落入汴京章的眼中——而那一句「不辭長作嶺南人」，將為他招來更遠的貶途。'}
+  ],
+  choices:[
+   {t:'「日啖荔支三百顆——縱招禍，我也認了！」（豪氣）',fx:{linang:8,huoda:9},goto:'ch0'},
+   {t:'「此果只應天上有，人間能得幾回嘗。」（低迴讚嘆）',fx:{huoda:3,chaoyun:3},goto:'ch0'},
+   {t:'「甜是甜……只是這甜，怕要招禍。」（隱憂）',fx:{huoda:2,zihou:3},goto:'ch0'}
+  ]},
+
+/* ---- 第六章 蝶戀花·六如 ---- */
+ch0:{bg:'bg_westlake',chapter:['第六章','蝶 戀 花 · 六 如'],audio:'sad',
+  chars:[{id:'chaoyun',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'紹聖三年，秋。朝雲病了。惠州西湖的柳，一夜黃了大半。'},
+   {sp:'narrator',t:'她欲歌《蝶戀花》，喉間卻哽住，久無聲。他問其故。'},
+   {sp:'chaoyun',t:'（氣若游絲）奴不能歌者……是「枝上柳綿吹又少，天涯何處無芳草」。'},
+   {sp:'narrator',t:'他翻然大笑，笑裡卻落了淚：是吾正悲秋，而汝又傷春矣。遂罷。'},
+   {sp:'narrator',t:'七月初五，朝雲卒，年三十四。彌留之際，口誦《金剛經》六如偈：一切有為法，如夢幻泡影，如露亦如電，應作如是觀。'},
+   {sp:'narrator',t:'他葬她於西湖棲禪寺畔，築亭覆之，名曰「六如」。親撰墓誌：浮屠是瞻，伽藍是依。如汝宿心，唯佛是歸。'},
+   {sp:'narrator',t:'羅道士亦來亭前，置一枝山花於牌位之下，合掌無言，良久方去。一佛一道，同送一朵雲歸山。'}
+  ],next:'ch1'},
+ch1:{chars:[{id:'sushi',pos:'center'}],
+  lines:[
+   {sp:'sushi',t:'（獨坐亭中，對一湖殘荷）如夢、如幻、如泡、如影、如露、如電……'},
+   {sp:'sushi',t:'朝雲，世人皆誇我豁達。可他們不知——真正的豁達，不是不痛，是痛著，卻不被痛所困。'},
+   {sp:'sushi',t:'羅道長說我是山不是雲。可朝雲這朵雲去了，我這座山，竟也空了一半。'},
+   {sp:'sushi',t:'我若強忘你，便是負你；我若為你殉，便是負這天地予我的餘生。這「忘」與「不忘」之間，便是我後半生的修行。'}
+  ],
+  choices:[
+   {t:'「我不求忘，只求不為其所困。悲歡皆納於懷，而心常清靜。」',fx:{huoda:11},goto:'dz0'},
+   {t:'「朝雲，妳成佛，我成人，各得其所。我會在夢裡尋妳。」',fx:{chaoyun:9,huoda:3},goto:'dz0'},
+   {t:'「山空了便空了。空處，正好容下嶺南的風與荔香。」',fx:{huoda:5,linang:3},goto:'dz0'},
+   {t:'「我恨。我恨這天地不仁，奪我所愛！」（捶亭柱）',fx:{huoda:-9},goto:'dz0'}
+  ]},
+
+/* ---- 第七章 再貶儋州 ---- */
+dz0:{bg:'bg_danzhou',chapter:['第七章','再 貶 儋 州'],audio:'sad',
+  chars:[{id:'linang',pos:'left'},{id:'sushi',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'紹聖四年。汴京的章惇讀到那首荔支詩，勃然變色：「蘇軾尚能作嶺南人邪？」一紙誥命，再貶瓊州別駕，昌化軍（儋州）安置。'},
+   {sp:'narrator',t:'宋時，海南為極邊死地。「此一去，便是去赴死。」他已六十有二，痔瘡纏身，卻仍整裝渡海。'},
+   {sp:'narrator',t:'臨行，他自述儋州之苦：食無肉，病無藥，居無室，出無友，冬無炭，夏無寒泉——六無之境，人間罕有。'},
+   {sp:'linang',t:'（捧一甕蜜漬荔支，眼眶通紅，硬是笑著）先生，這是妾年年漬的。您帶去天涯。想嶺南的甜時，便嚐一顆。'},
+   {sp:'linang',t:'朝雲姐姐愛吃的，妾替她留著，也替您留著。您……您要活著回來。'},
+   {sp:'sushi',t:'（接過瓷甕，指節發白，良久方道）荔娘，這甕甜，我帶走。嶺南的甜，從今跟我一起，去天涯。'}
+  ],next:'dz0b'},
+dz0b:{chars:[{id:'luoshi',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'luoshi',t:'（立於渡口，海風吹動白鬚）蘇先生，海闊。可人心，比海更闊。'},
+   {sp:'luoshi',t:'貧道那山雲的公案，先生到海南，慢慢參。參透了，天涯亦是羅浮；參不透，羅浮亦是天涯。'},
+   {sp:'sushi',t:'（長揖到地）道長珍重。這一去，不知何年再見羅浮的雲。'},
+   {sp:'sushi',t:'（轉身登舟，對幼子蘇過）過兒，扶穩了。為父這一生，從汴京到黃州，從黃州到惠州，如今從惠州到海南——路越走越遠，心，倒越走越寬。'}
+  ],
+  choices:[
+   {t:'「荔娘，這甕蜜漬，我帶去天涯。嶺南的甜，跟我一起走。」',fx:{linang:8,huoda:3},goto:'dz1'},
+   {t:'「羅道長，山與雲的公案，我到海南再去參。」',fx:{huoda:6},goto:'dz1'},
+   {t:'「子厚，你貶我到天涯海角——可你貶不走我的詩，也貶不走我的甜。」',fx:{zihou:6,huoda:2},goto:'dz1'}
+  ]},
+
+/* ---- 第八章 儋州天涯 ---- */
+dz1:{bg:'bg_danzhou',chapter:['第八章','儋 州 天 涯'],audio:'warm',
+  chars:[{id:'guo',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'儋州。椰影海聲，茅屋數椽。他於此設東坡書院，開海南文教之先，蠻荒之地，自此弦誦不絕。'},
+   {sp:'sushi',t:'（蹲於海邊，撬開一隻蠔，眉眼飛揚）過兒，來嚐這蠔—— truly 美味！'},
+   {sp:'sushi',t:'（壓低聲音，煞有介事）只是切莫告訴中原的士大夫，免得他們爭相求貶儋州，來與為父搶蠔吃！'},
+   {sp:'guo',t:'（又笑又淚）父親……古今遷客逐臣，到了這等絕地，唯有您，還愁別人來搶您的蠔。'},
+   {sp:'sushi',t:'（大笑，笑罷望海）我本儋耳人，寄生西蜀州。忽然跨海去，譬如昔年游。'},
+   {sp:'sushi',t:'過兒，為父此生的功業，不在廟堂的奏議裡，在這天涯的講堂、這海邊的蠔田、這一肚子——依舊不合時宜的甜。'}
+  ],
+  choices:[
+   {t:'「九死南荒吾不恨——茲游奇絕冠平生！」（對海長嘯）',fx:{huoda:10},goto:'fn0'},
+   {t:'「過兒，為父此生功業，不在廟堂，在這天涯的講堂與蠔田。」',fx:{huoda:6},goto:'fn0'},
+   {t:'「朝雲，妳看這海。海的那頭，是惠州，是妳的六如亭。」',fx:{chaoyun:7},goto:'fn0'}
+  ]},
+
+/* ---- 終章 北歸·雷州一書 ---- */
+fn0:{bg:'bg_boat',chapter:['終章','北 歸 · 雷 州 一 書'],audio:'game',
+  chars:[{id:'guo',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'建中靖國元年。徽宗即位，大赦天下。蘇軾獲赦北歸，六月二十日夜渡海，作詩：九死南荒吾不恨，茲游奇絕冠平生。'},
+   {sp:'narrator',t:'北歸途中，忽聞一訊——章惇因反對端王繼位，獲罪遠謫，竟也被貶到了嶺南雷州。情勢逆轉，天意難測。'},
+   {sp:'guo',t:'（持一封信，神色複雜）父親……章惇季子章援，是您的門生，特致書為老父求情。'},
+   {sp:'narrator',t:'他展開信紙。燈下，往事如潮湧來：烏臺獄中救他一命的章惇，黃州時致書勸勉的章惇，元祐時生嫌隙的章惇，紹聖時把他一貶再貶、直至天涯的章惇。'},
+   {sp:'sushi',t:'（撫信良久，望向江月）子厚……當年烏臺，你救我命；後來惠州、儋州，你送我赴死。'},
+   {sp:'sushi',t:'我不怨你。我所怨的，是這世道，逼人相殺，逼你成了一把刀。如今刀也鈍了，人也老了，雷州的瘴癘，與我當年何異？'},
+   {sp:'sushi',t:'（提筆）取墨來。我當復書子厚之子——不談舊怨，只授以嶺南養生之道。雷州苦寒，子厚年高，願他……好好活著。'},
+   {sp:'narrator',t:'這一紙書，無一字怨，字字殷殷。天下聞之，皆嘆其胸襟。恩怨二字，在他筆下，輕得像一片剝落的荔殼。'}
+  ],
+  choices:[
+   {t:'「恩怨皆空。子厚，願你在雷州，也學會日啖荔支三百顆。」',fx:{zihou:11,huoda:4},goto:'calc'},
+   {t:'「荔娘、羅道長、朝雲……我身雖北歸，心已長作嶺南人。」',fx:{linang:11,huoda:6},goto:'calc'},
+   {t:'「朝雲，六如亭的月又圓了。此生將盡，我來夢中尋妳。」',fx:{chaoyun:11},goto:'calc'},
+   {t:'「罷了……這一世，太累了。我寫不動了。」',fx:{huoda:-16},goto:'calc'}
+  ]},
+
+/* ---- ENDINGS ---- */
+end_lingnan:{bg:'bg_orchard',audio:'warm',chars:[{id:'linang',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'他的身軀終於北返，可他的心，早已在荔香裡生根。朝雲的夢、羅道士的雲山、荔娘的蜜甕、子厚的舊怨——皆被他一一安放，釀成一肚子合時宜的甜。'},
+   {sp:'sushi',t:'（對這片土地，亦對天地，朗聲而笑）羅浮山下四時春，盧橘楊梅次第新——'},
+   {sp:'sushi',t:'日啖荔支三百顆，不辭長作嶺南人！'},
+   {sp:'linang',t:'（含淚而笑，將一枝紅荔虛虛簪向他鬢邊）先生，嶺南，也長作您的人。'},
+   {sp:'narrator',t:'此心安處，便是吾鄉。他回到了中原，可每當闔上眼，他仍在嶺南——在那座不喜雲來、不悲雲去的山裡。'}
+  ],
+  ending:{type:'真 結 局',title:'此 心 安 處',
+   poem:'羅浮山下四時春，盧橘楊梅次第新。\n日啖荔支三百顆，不辭長作嶺南人。\n\n此心安處，便是吾鄉。\n—— 身雖北歸，心長作嶺南人；\n   他以豁達為舟，以深情為錨，\n   終在瘴海之濱，把流放活成了故鄉。'}},
+
+end_chaoyun:{bg:'bg_westlake',audio:'sad',chars:[{id:'chaoyun',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'建中靖國元年七月，他病於常州，將歿。彌留之際，魂夢忽返惠州，見六如亭畔，朝雲仍著那身青衫，於柳綿飛處回首。'},
+   {sp:'chaoyun',t:'（微笑）先生，妾不曾走。一切有為法，如夢幻泡影——夢若在，妾便在。'},
+   {sp:'sushi',t:'（伸手，觸到的卻是滿湖月光）朝雲……原來我一生豁達，唯獨對你，甘願不醒。'},
+   {sp:'narrator',t:'浮屠是瞻，伽藍是依。如汝宿心，唯佛是歸。他闔上眼，於夢裡與她同歸六如，如露，如電，亦如長生。'}
+  ],
+  ending:{type:'朝 雲 結 局',title:'六 如 亭 畔',
+   poem:'枝上柳綿吹又少，天涯何處無芳草。\n浮屠是瞻，伽藍是依。\n\n—— 他將深情供成佛前的一盞燈，\n   身歸常州，魂返六如；\n   夢裡相見，便是長生。'}},
+
+end_zihou:{bg:'bg_boat',audio:'game',chars:[{id:'zhangdun',pos:'left'},{id:'sushi',pos:'right'}],
+  lines:[
+   {sp:'narrator',t:'他提筆復書章援，字字殷殷，授以嶺南養生之道，無一字怨其父。這一紙書，是他一生最難寫、也最寬闊的一筆。'},
+   {sp:'sushi',t:'（擱筆，望向雷州方向）子厚，你當年攀絕壁而不懼，我信你亦能過這瘴海。烏臺那一命，我今日，還你半紙書。'},
+   {sp:'sushi',t:'我與你，相愛相殺半生。到頭來，殺我的不是你，是這世道；而肯原諒你的，倒剩我這一支筆。'},
+   {sp:'narrator',t:'傳聞章惇於雷州讀到此書，這個攀絕壁面不改色的人，竟為舊友，落了一生的淚。恩怨如荔殼，剝開，便棄了。'}
+  ],
+  ending:{type:'子 厚 結 局',title:'雷 州 一 書',
+   poem:'子厚必能殺人，亦必能渡己。\n不念舊惡，恩怨皆空。\n\n—— 他以一紙書，\n   將烏臺的恩、嶺南的怨，\n   盡數化作了雷州海上的暖風。'}},
+
+end_north:{bg:'bg_boat',audio:'game',chars:[{id:'sushi',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'他既未沉淪，也未全然安頓。北歸途中，過金山，見壁上舊時畫像，他提筆自題，為一生作結。'},
+   {sp:'sushi',t:'（對畫像，亦對蒼天，平靜而蒼涼）心似已灰之木，身如不繫之舟。'},
+   {sp:'sushi',t:'問汝平生功業——黃州、惠州、儋州。'},
+   {sp:'narrator',t:'建中靖國元年七月，蘇軾卒於常州，年六十六。他沒有長作嶺南人，可嶺南的荔香、羅浮的雲山、天涯的蠔田，已滲進他的骨血，北風吹不散。這，便是真實而完整的人生。'}
+  ],
+  ending:{type:'北 歸 結 局',title:'金 山 自 題',
+   poem:'心似已灰之木，身如不繫之舟。\n問汝平生功業，黃州惠州儋州。\n\n—— 他未能長留嶺南，\n   卻把三次貶謫，\n   活成了平生最高的功業。'}},
+
+end_sink:{bg:'bg_westlake',audio:'sad',chars:[{id:'sushi',pos:'center'}],
+  lines:[
+   {sp:'narrator',t:'他終究沒能諒解這天地。朝雲既逝，荔支再甜，入口皆是苦；羅道士的山雲之喻，他聽不進去；子厚的舊怨，他放不下。'},
+   {sp:'sushi',t:'（對空亭喃喃）空庖煮寒菜，破灶燒濕葦……我蘇軾，原來也逃不過這一個「怨」字。'},
+   {sp:'narrator',t:'那首「日啖荔支三百顆」，他始終沒有寫下。嶺南的紅雲年年照舊，卻再不曾落進他的詩裡——豁達若失，縱有三百顆紅荔，也救不了一個不肯原諒世界的人。'}
+  ],
+  ending:{type:'沉 淪 結 局',title:'瘴 海 無 詩',
+   poem:'空庖煮寒菜，破灶燒濕葦。\n心為形役，荔亦成苦。\n\n—— 豁達若失，\n   縱有三百顆紅荔，\n   也救不了一個不肯原諒世界的人。'}}
+};
+
+/* ============================ ENGINE STATE ============================ */
+let state={node:null,lineIdx:0,typing:false,stats:{huoda:40,chaoyun:0,linang:0,zihou:0},
+  history:[],chapter:'',auto:false,skip:false,started:false};
+let typeTimer=null, autoTimer=null;
+const $=s=>document.querySelector(s);
+const elText=$('#text'), elName=$('#namePlate'), elChars=$('#chars'), elChoices=$('#choices'),
+      elBg=$('#bgLayer'), elChap=$('#chapName');
+
+let curBg=null;
+function setBg(key){
+  if(!key||key===curBg)return;
+  curBg=key;
+  const d=document.createElement('div');d.className='bg';d.style.backgroundImage=`url(${IMG[key]})`;
+  elBg.appendChild(d);
+  requestAnimationFrame(()=>d.classList.add('on'));
+  const olds=elBg.querySelectorAll('.bg');
+  olds.forEach(o=>{if(o!==d){o.style.transition='opacity 1.1s';o.style.opacity='0';setTimeout(()=>o.remove(),1200);}});
+}
+
+let curChars=[];
+function setChars(list){
+  curChars=list||[];
+  elChars.innerHTML='';
+  curChars.forEach(c=>{
+    const w=document.createElement('div');w.className='char pos-'+c.pos;w.dataset.id=c.id;
+    w.innerHTML=`<div class="scroll"><div class="rod"></div><div class="paper"><img src="${IMG[c.id]}" alt="${NAME[c.id]}"></div><div class="roll"></div></div>`;
+    elChars.appendChild(w);
+    const imgEl=w.querySelector('img');
+    imgEl.onerror=()=>{
+      imgEl.style.display='none';
+      const fb=document.createElement('div');fb.className='fb';
+      fb.textContent=(NAME[c.id]||'').replace(/\s/g,'');
+      w.querySelector('.paper').appendChild(fb);
+    };
+    requestAnimationFrame(()=>w.classList.add('show'));
+  });
+}
+function highlight(speaker){
+  const map={};curChars.forEach(c=>map[c.id]=true);
+  const sid=Object.keys(NAME).find(k=>NAME[k]===speaker||k===speaker);
+  elChars.querySelectorAll('.char').forEach(w=>{
+    w.classList.remove('speak','dim');
+    if(sid && map[sid]){
+      if(w.dataset.id===sid)w.classList.add('speak');else w.classList.add('dim');
+    }
+  });
+}
+
+function typeText(txt){
+  clearInterval(typeTimer);clearTimeout(autoTimer);
+  state.typing=true;elText.innerHTML='';$('#adv').style.visibility='hidden';
+  let i=0;const speed=101-parseInt($('#txtSpeed').value);
+  typeTimer=setInterval(()=>{
+    if(i>=txt.length){clearInterval(typeTimer);state.typing=false;$('#adv').style.visibility='visible';afterLine();return;}
+    elText.innerHTML=txt.slice(0,i+1);i++;
+  },Math.max(12,speed));
+}
+function finishType(txt){clearInterval(typeTimer);elText.innerHTML=txt;state.typing=false;$('#adv').style.visibility='visible';}
+
+function showLine(){
+  const n=S[state.node];
+  if(n.lines && state.lineIdx<n.lines.length){
+    const ln=n.lines[state.lineIdx];
+    elName.textContent=NAME[ln.sp]||ln.sp;
+    elName.style.background=`linear-gradient(180deg,${PLATE[ln.sp]||'#3a2e22'},rgba(0,0,0,.25))`;
+    highlight(ln.sp);
+    typeText(ln.t);
+    pushLog(ln.sp,ln.t);
+  }else{
+    highlight(null);
+    if(n.choices){showChoices(n.choices);}
+    else if(n.ending){showEnding(n.ending);}
+    else if(n.next){goto(n.next);}
+  }
+}
+function afterLine(){
+  if(state.auto){autoTimer=setTimeout(advance,parseInt($('#autoDelay').value)*100);}
+}
+function advance(){
+  if(!state.started)return;
+  if(elChoices.classList.contains('on'))return;
+  if($('#endCard').classList.contains('on'))return;
+  const n=S[state.node];
+  if(state.typing){finishType(n.lines[state.lineIdx].t);afterLine();return;}
+  state.lineIdx++;
+  sfx('click');
+  showLine();
+}
+
+function showChoices(list){
+  elChoices.innerHTML='';
+  list.forEach((c,i)=>{
+    const b=document.createElement('div');b.className='choice';
+    b.innerHTML=`<span class="num">${['一','二','三','四','五'][i]||i+1}</span>${c.t.replace(/^「|」$/g,'')}`;
+    b.onclick=e=>{e.stopPropagation();choose(c);};
+    elChoices.appendChild(b);
+  });
+  elChoices.classList.add('on');
+  sfx('page');
+}
+function choose(c){
+  if(c.fx){for(const k in c.fx){state.stats[k]=(state.stats[k]||0)+c.fx[k];}}
+  pushLog('擇',c.t);
+  elChoices.classList.remove('on');
+  sfx('choose');
+  flashBond(c.fx);
+  goto(c.goto);
+}
+
+function goto(id){
+  if(id==='calc'){const e=computeEnding();goto(e);return;}
+  const n=S[id];if(!n){console.warn('missing',id);return;}
+  state.node=id;state.lineIdx=0;
+  if(n.bg)setBg(n.bg);
+  if(n.chars!==undefined)setChars(n.chars);
+  if(n.audio)Audio.setMood(n.audio);
+  if(n.chapter){showSplash(n.chapter,()=>{elChap.textContent=n.chapter[1].replace(/\s/g,'');showLine();});}
+  else {elChap.textContent=(state.chapter||elChap.textContent);showLine();}
+  if(n.chapter)state.chapter=n.chapter[1].replace(/\s/g,'');
+}
+function showSplash(arr,cb){
+  const sp=$('#splash');sp.querySelector('.ch-no').textContent=arr[0];
+  sp.querySelector('.ch-title').textContent=arr[1].replace(/\s/g,'');
+  sp.classList.add('on');
+  sp.querySelectorAll('.ch-no,.ch-title,.ch-line').forEach(e=>{e.style.animation='none';void e.offsetWidth;e.style.animation='';});
+  setTimeout(()=>{sp.classList.remove('on');cb&&cb();},2300);
+}
+
+function computeEnding(){
+  const s=state.stats;
+  if(s.huoda<=24)return 'end_sink';
+  const bonds={linang:s.linang,chaoyun:s.chaoyun,zihou:s.zihou};
+  let top='linang',max=-999;
+  for(const k in bonds){if(bonds[k]>max){max=bonds[k];top=k;}}
+  if(max<12)return 'end_north';
+  if(top==='linang')return s.huoda>=50?'end_lingnan':'end_north';
+  if(top==='chaoyun')return 'end_chaoyun';
+  if(top==='zihou')return 'end_zihou';
+  return 'end_north';
+}
+function showEnding(meta){
+  highlight(null);
+  const s=state.stats;
+  $('#endCard .etype').textContent=meta.type;
+  $('#endCard .etitle').textContent=meta.title;
+  $('#endCard .epoem').textContent=meta.poem;
+  $('#endCard .estats').textContent=`豁達 ${s.huoda} ｜ 朝雲 ${s.chaoyun} ｜ 荔娘 ${s.linang} ｜ 子厚 ${s.zihou}`;
+  $('#endCard').classList.add('on');
+  $('#endCard').querySelectorAll('.etype,.etitle,.epoem,.estats,.ebtns').forEach(e=>{e.style.animation='none';void e.offsetWidth;e.style.animation='';});
+  state.auto=false;state.skip=false;syncBtns();
+}
+
+function pushLog(sp,t){
+  state.history.push({sp:NAME[sp]||sp,t});
+  if(state.history.length>120)state.history.shift();
+}
+function renderLog(){
+  const box=$('#logList');box.innerHTML='';
+  state.history.slice(-40).reverse().forEach(h=>{
+    const d=document.createElement('div');d.className='logline';
+    d.innerHTML=`<b>${h.sp}</b>${h.t}`;box.appendChild(d);
+  });
+}
+
+function renderBonds(){
+  const box=$('#bondBox');box.innerHTML='';const s=state.stats;
+  const maxv=Math.max(60,s.huoda,s.chaoyun,s.linang,s.zihou,1);
+  for(const k of ['huoda','chaoyun','linang','zihou']){
+    const v=Math.max(0,s[k]||0);
+    const d=document.createElement('div');d.className='bond';
+    d.innerHTML=`<div class="lab"><span>${BOND_LABEL[k]}</span><span class="v">${v}</span></div><div class="bar"><i style="width:${Math.min(100,v/maxv*100)}%"></i></div>`;
+    box.appendChild(d);
+  }
+}
+function flashBond(fx){
+  if(!fx)return;
+  const names={huoda:'豁達',chaoyun:'朝雲',linang:'荔娘',zihou:'子厚'};
+  const parts=[];for(const k in fx){parts.push(`${names[k]} ${fx[k]>0?'+':''}${fx[k]}`);}
+  toast(parts.join('   '));
+}
+let toastT=null;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),1100);}
+
+function saveGame(slot){
+  const data={node:state.node,lineIdx:state.lineIdx,stats:state.stats,history:state.history.slice(-60),chapter:state.chapter,
+    label:S[state.node]&&S[state.node].chapter?S[state.node].chapter[1].replace(/\s/g,''):(state.chapter||'卷中'),
+    time:new Date().toLocaleString('zh-Hant')};
+  localStorage.setItem('lxy_save_'+slot,JSON.stringify(data));
+  toast('已存 · 第'+slot+'卷');
+}
+function loadGame(slot){
+  const raw=localStorage.getItem('lxy_save_'+slot);
+  if(!raw){toast('此卷空無');return;}
+  const d=JSON.parse(raw);
+  state.stats=d.stats;state.history=d.history||[];state.chapter=d.chapter||'';
+  hideTitle();state.started=true;
+  elChoices.classList.remove('on');$('#endCard').classList.remove('on');
+  state.node=d.node;state.lineIdx=0;
+  const n=S[d.node];if(n.bg)setBg(n.bg);if(n.chars!==undefined)setChars(n.chars);if(n.audio)Audio.setMood(n.audio);
+  elChap.textContent=d.label||'卷';
+  showLine();
+  closeModal('mSave');toast('已讀 · 第'+slot+'卷');
+}
+function renderSlots(mode){
+  const box=$('#slotBox');box.innerHTML='';$('#saveTitle').textContent=mode==='save'?'存 檔':'讀 檔';
+  for(let i=1;i<=3;i++){
+    const raw=localStorage.getItem('lxy_save_'+i);
+    const d=raw?JSON.parse(raw):null;
+    const row=document.createElement('div');row.className='slot'+(d?'':' empty');
+    row.innerHTML=`<div class="info"><b>第${['一','二','三'][i-1]}卷</b>${d?d.label+' · '+d.time:'—— 空 ——'}</div>
+      <div class="act">${mode==='save'?`<span data-act="save" data-s="${i}">覆寫</span>`:`<span data-act="load" data-s="${i}">讀取</span>`}
+      <span data-act="del" data-s="${i}">刪</span></div>`;
+    box.appendChild(row);
+  }
+  box.querySelectorAll('[data-act]').forEach(b=>b.onclick=e=>{
+    e.stopPropagation();const s=b.dataset.s;
+    if(b.dataset.act==='save'){saveGame(s);renderSlots('save');}
+    else if(b.dataset.act==='load'){loadGame(s);}
+    else if(b.dataset.act==='del'){localStorage.removeItem('lxy_save_'+s);renderSlots(mode);toast('已刪');}
+  });
+}
+
+function openModal(id){if(id==='mLog')renderLog();if(id==='mBond')renderBonds();$('#'+id).classList.add('on');}
+function closeModal(id){$('#'+id).classList.remove('on');}
+document.querySelectorAll('[data-close]').forEach(c=>c.onclick=e=>{e.stopPropagation();c.closest('.modal').classList.remove('on');});
+document.querySelectorAll('.modal').forEach(m=>m.onclick=e=>{if(e.target===m)m.classList.remove('on');});
+
+function syncBtns(){$('#bAuto').classList.toggle('on',state.auto);$('#bSkip').classList.toggle('on',state.skip);}
+$('#bAuto').onclick=e=>{e.stopPropagation();state.auto=!state.auto;if(state.auto&&!state.typing){autoTimer=setTimeout(advance,parseInt($('#autoDelay').value)*100);}syncBtns();};
+$('#bSkip').onclick=e=>{e.stopPropagation();state.skip=!state.skip;syncBtns();if(state.skip)skipLoop();};
+function skipLoop(){if(!state.skip||!state.started)return;if(elChoices.classList.contains('on')||$('#endCard').classList.contains('on')){state.skip=false;syncBtns();return;}
+  const n=S[state.node];if(state.typing){finishType(n.lines[state.lineIdx].t);}state.lineIdx++;showLine();
+  if(n.lines&&state.lineIdx<=n.lines.length)setTimeout(skipLoop,40);else{state.skip=false;syncBtns();}}
+$('#bLog').onclick=e=>{e.stopPropagation();openModal('mLog');};
+$('#bBond').onclick=e=>{e.stopPropagation();openModal('mBond');};
+$('#bSave').onclick=e=>{e.stopPropagation();renderSlots('save');openModal('mSave');};
+$('#bLoad').onclick=e=>{e.stopPropagation();renderSlots('load');openModal('mSave');};
+$('#bConf').onclick=e=>{e.stopPropagation();openModal('mConf');};
+$('#bMusic').onclick=e=>{e.stopPropagation();Audio.toggle();$('#bMusic').classList.toggle('on',Audio.on);};
+
+$('#volMusic').oninput=e=>Audio.setMusicVol(e.target.value/100);
+$('#volSfx').oninput=e=>Audio.setSfxVol(e.target.value/100);
+$('#muteToggle').onclick=e=>{e.stopPropagation();Audio.toggle();e.target.textContent=Audio.on?'開':'關';e.target.classList.toggle('on',Audio.on);$('#bMusic').classList.toggle('on',Audio.on);};
+$('#resetGame').onclick=e=>{e.stopPropagation();closeModal('mConf');startGame();};
+$('#backTitle').onclick=e=>{e.stopPropagation();closeModal('mConf');location.reload();};
+
+$('#dlg').onclick=e=>{e.stopPropagation();advance();};
+$('#game').onclick=()=>{if(state.started)advance();};
+
+/* ============================ AUDIO ENGINE ============================ */
+const Audio=(()=>{
+  let ctx=null,master=null,musicGain=null,sfxGain=null,reverb=null,droneNodes=[],sched=null,step=0,on=true,mood='title';
+  const mVol=0.55,sVol=0.7;
+  const SCALES={
+    title:[220,261.63,293.66,329.63,392,440,523.25],
+    game:[261.63,293.66,329.63,392,440,523.25,587.33,659.25],
+    warm:[329.63,392,440,523.25,587.33,659.25,783.99],
+    sad:[196,220,261.63,293.66,349.23,392,440]
+  };
+  const TEMPO={title:0.62,game:0.42,warm:0.40,sad:0.78};
+  function ensure(){
+    if(ctx)return;
+    ctx=new (window.AudioContext||window.webkitAudioContext)();
+    master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);
+    musicGain=ctx.createGain();musicGain.gain.value=mVol;musicGain.connect(master);
+    sfxGain=ctx.createGain();sfxGain.gain.value=sVol;sfxGain.connect(master);
+    reverb=ctx.createConvolver();reverb.buffer=makeImpulse(2.6,2.2);
+    const rg=ctx.createGain();rg.gain.value=0.35;reverb.connect(rg);rg.connect(musicGain);
+    window._rev=rg;
+  }
+  function makeImpulse(dur,decay){
+    const r=ctx.sampleRate,len=r*dur,buf=ctx.createBuffer(2,len,r);
+    for(let c=0;c<2;c++){const d=buf.getChannelData(c);for(let i=0;i<len;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/len,decay);}}
+    return buf;
+  }
+  function pluck(freq,t,dur,vel,type){
+    const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),f=ctx.createBiquadFilter();
+    o.type=type||'triangle';o2.type='sine';o.frequency.value=freq;o2.frequency.value=freq*2.003;
+    f.type='lowpass';f.frequency.setValueAtTime(Math.min(6000,freq*6),t);f.frequency.exponentialRampToValueAtTime(Math.max(400,freq*1.5),t+dur*0.7);
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vel,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(f);o2.connect(f);f.connect(g);g.connect(musicGain);g.connect(reverb);
+    o.start(t);o2.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05);
+  }
+  function drone(freq){
+    const o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();
+    o.type='sine';o.frequency.value=freq;lfo.type='sine';lfo.frequency.value=0.12;lg.gain.value=0.015;
+    lfo.connect(lg);lg.connect(g.gain);g.gain.value=0.05;o.connect(g);g.connect(musicGain);g.connect(reverb);
+    o.start();lfo.start();droneNodes.push(o,lfo);
+  }
+  function stopDrone(){droneNodes.forEach(n=>{try{n.stop();}catch(e){}});droneNodes=[];}
+  function startSched(){
+    stopSched();step=0;
+    const sc=SCALES[mood]||SCALES.game;
+    drone((SCALES[mood]||SCALES.game)[0]/2);
+    let next=ctx.currentTime+0.2;
+    sched=setInterval(()=>{
+      if(!on||!ctx)return;
+      while(next<ctx.currentTime+0.25){
+        const beat=TEMPO[mood]||0.45;
+        if(Math.random()<0.82){
+          const idx=Math.floor(Math.random()*sc.length);
+          const oct=Math.random()<0.3?2:1;
+          pluck(sc[idx]*oct,next,beat*2.2,0.16+Math.random()*0.06,'triangle');
+        }
+        if(Math.random()<0.3){pluck(sc[Math.floor(Math.random()*4)]*0.5,next+beat*0.5,beat*2,0.1,'sine');}
+        if(step%8===0){pluck(sc[0]*0.5,next,beat*3,0.12,'sine');}
+        next+=beat*(Math.random()<0.25?1.5:1);
+        step++;
+      }
+    },80);
+  }
+  function stopSched(){if(sched){clearInterval(sched);sched=null;}stopDrone();}
+  function setMood(m){if(m===mood&&sched)return;mood=m;if(ctx&&on){stopSched();startSched();}}
+  function toggle(){on=!on;if(on){ensure();if(ctx.state==='suspended')ctx.resume();if(!sched)startSched();musicGain.gain.setTargetAtTime(mVol,ctx.currentTime,0.4);}
+    else{if(musicGain)musicGain.gain.setTargetAtTime(0,ctx.currentTime,0.3);stopSched();}return on;}
+  function setMusicVol(v){if(musicGain&&on)musicGain.gain.setTargetAtTime(v,ctx.currentTime,0.2);}
+  function setSfxVol(v){if(sfxGain)sfxGain.gain.value=v;}
+  function sfx(kind){
+    if(!ctx||!on)return;const t=ctx.currentTime;
+    if(kind==='click'){const o=ctx.createOscillator(),g=ctx.createGain();o.type='square';o.frequency.value=620;
+      g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.12,t+0.005);g.gain.exponentialRampToValueAtTime(0.0001,t+0.09);
+      o.connect(g);g.connect(sfxGain);o.start(t);o.stop(t+0.1);}
+    else if(kind==='choose'){pluckSfx(523.25,t,0.18);pluckSfx(783.99,t+0.08,0.22);}
+    else if(kind==='page'){const b=ctx.createBuffer(1,ctx.sampleRate*0.18,ctx.sampleRate),d=b.getChannelData(0);
+      for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/d.length,3)*0.3;
+      const s=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();s.buffer=b;f.type='bandpass';f.frequency.value=1800;
+      g.gain.value=0.25;s.connect(f);f.connect(g);g.connect(sfxGain);s.start(t);}
+  }
+  function pluckSfx(freq,t,dur){const o=ctx.createOscillator(),g=ctx.createGain();o.type='triangle';o.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.18,t+0.006);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g);g.connect(sfxGain);g.connect(reverb);o.start(t);o.stop(t+dur+0.02);}
+  function init(){ensure();if(ctx.state==='suspended')ctx.resume();if(on&&!sched)startSched();}
+  return {init,setMood,toggle,setMusicVol,setSfxVol,sfx,get on(){return on;}};
+})();
+function sfx(k){Audio.sfx(k);}
+
+/* ============================ TITLE / START ============================ */
+$('#title .tbg').style.backgroundImage=`url(${IMG.bg_title})`;
+function hideTitle(){$('#title').style.transition='opacity 1s';$('#title').style.opacity='0';setTimeout(()=>$('#title').style.display='none',1000);}
+function startGame(){
+  Audio.init();
+  state={node:null,lineIdx:0,typing:false,stats:{huoda:40,chaoyun:0,linang:0,zihou:0},history:[],chapter:'',auto:false,skip:false,started:true};
+  elChoices.classList.remove('on');$('#endCard').classList.remove('on');
+  hideTitle();
+  goto('w0');
+}
+$('#tStart').onclick=e=>{e.stopPropagation();startGame();};
+$('#tCont').onclick=e=>{e.stopPropagation();Audio.init();renderSlots('load');openModal('mSave');};
+$('#tMute').onclick=e=>{e.stopPropagation();Audio.init();const o=Audio.toggle();e.target.firstChild.textContent=o?'調 弦 ':'靜 弦 ';};
+$('#endReplay').onclick=e=>{e.stopPropagation();startGame();};
+$('#endTitle').onclick=e=>{e.stopPropagation();location.reload();};
+
+['tStart','tCont','tMute'].forEach(id=>$('#'+id).addEventListener('pointerdown',()=>Audio.init(),{once:false}));
+
+/* ============================ PETAL / FX CANVAS ============================ */
+const cv=$('#fx'),cx=cv.getContext('2d');let W,H,petals=[];
+function resize(){W=cv.width=innerWidth;H=cv.height=innerHeight;}
+resize();addEventListener('resize',resize);
+function mkPetal(){return{x:Math.random()*W,y:Math.random()*-H,r:3+Math.random()*5,
+  vy:0.4+Math.random()*0.9,vx:-0.4+Math.random()*0.8,rot:Math.random()*6.28,vr:-0.02+Math.random()*0.04,
+  hue:Math.random()<0.7?'rgba(178,58,46,':'rgba(201,162,75,',a:0.25+Math.random()*0.4,sw:Math.random()*6.28};}
+for(let i=0;i<46;i++){const p=mkPetal();p.y=Math.random()*H;petals.push(p);}
+function drawPetal(p){
+  cx.save();cx.translate(p.x,p.y);cx.rotate(p.rot);
+  cx.fillStyle=p.hue+p.a+')';
+  cx.beginPath();cx.ellipse(0,0,p.r,p.r*0.5,0,0,6.28);cx.fill();
+  cx.restore();
+}
+function loop(){
+  cx.clearRect(0,0,W,H);
+  for(const p of petals){
+    p.sw+=0.02;p.x+=p.vx+Math.sin(p.sw)*0.5;p.y+=p.vy;p.rot+=p.vr;
+    if(p.y>H+10||p.x<-10||p.x>W+10){Object.assign(p,mkPetal());}
+    drawPetal(p);
+  }
+  requestAnimationFrame(loop);
+}
+loop();
+
+addEventListener('keydown',e=>{
+  if(!state.started)return;
+  if(e.key===' '||e.key==='Enter'){e.preventDefault();advance();}
+  if(e.key==='Control'){$('#bSkip').click();}
+});
+
+setBg('bg_prison');curBg=null;
+elBg.innerHTML='';
+</script>
+</body>
+</html>
